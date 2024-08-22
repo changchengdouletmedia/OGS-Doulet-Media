@@ -1,0 +1,52 @@
+# .github/workflows/label-commits.yml
+name: Label Issues Based on Commit Messages
+
+on:
+  push:
+    branches:
+      - main  # Adjust to your default branch or the branch you want to monitor
+
+jobs:
+  label-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Label issues based on commit messages
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+
+            async function labelIssuesBasedOnCommits() {
+              // Get the list of commits
+              const commits = context.payload.commits;
+
+              for (const commit of commits) {
+                if (commit.message.toLowerCase().includes('adding')) {
+                  // Find issues related to the commit
+                  const issueNumbers = [...commit.message.matchAll(/#(\d+)/g)].map(m => parseInt(m[1]));
+
+                  for (const issueNumber of issueNumbers) {
+                    try {
+                      await octokit.issues.addLabels({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: issueNumber,
+                        labels: ['upload sgf'],
+                      });
+                      console.log(`Labeled issue #${issueNumber} as 'upload sgf'`);
+                    } catch (error) {
+                      console.error(`Failed to label issue #${issueNumber}:`, error);
+                    }
+                  }
+                }
+              }
+            }
+
+            labelIssuesBasedOnCommits();
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
