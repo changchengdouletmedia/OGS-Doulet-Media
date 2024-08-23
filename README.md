@@ -1,1 +1,1 @@
-[![Label Issues Based on Commit Messages](https://github.com/changchengdouletmedia/OGS-Doulet-Media/actions/workflows/label-commits.yml/badge.svg)](https://github.com/changchengdouletmedia/OGS-Doulet-Media/actions/workflows/label-commits.yml)
+[![Mark stale issues and pull requests](https://github.com/changchengdouletmedia/OGS-Doulet-Media/actions/workflows/stale.yml/badge.svg)](https://github.com/changchengdouletmedia/OGS-Doulet-Media/actions/workflows/stale.yml)
